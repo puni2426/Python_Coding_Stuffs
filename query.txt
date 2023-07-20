@@ -1,0 +1,246 @@
+Average
+>db.emp.aggregate([{$group{_id:null,average:{$avg:"$SALARY"}}}])
+{ "_id" : null, "average" : 8950.727272727272 }
+
+Minimum
+> db.emp.aggregate([{$group:{_id:null,minimum:{$min:"$SALARY"}}}])
+{ "_id" : null, "minimum" : 2600 }
+
+Sum
+> db.emp.aggregate([{$group:{_id:null,total:{$sum:"$SALARY"}}}])
+{ "_id" : null, "total" : 196916 }
+
+Maximum
+> db.emp.aggregate([{$group:{_id:null,maximum {$max:"$SALARY"}}}])
+{ "_id" : null, "maximum" : 24000 }
+
+Index
+> db.empdetails.dropIndex({"name":1,"empid":1})
+{ "nIndexesWas" : 2, "ok" : 1 }
+> db.empdetails.createIndex({empid:1})
+{
+	"createdCollectionAutomatically" : false,
+	"numIndexesBefore" : 1,
+	"numIndexesAfter" : 2,
+	"ok" : 1
+}
+> db.empdetails.createIndex({name:1})
+{
+	"createdCollectionAutomatically" : false,
+	"numIndexesBefore" : 2,
+	"numIndexesAfter" : 3,
+	"ok" : 1
+}
+> db.empdetails.getIndexes()
+[
+	{
+		"v" : 2,
+		"key" : {
+			"_id" : 1
+		},
+		"name" : "_id_",
+		"ns" : "employee.empdetails"
+	},
+	{
+		"v" : 2,
+		"key" : {
+			"empid" : 1
+		},
+		"name" : "empid_1",
+		"ns" : "employee.empdetails"
+	},
+	{
+		"v" : 2,
+		"key" : {
+			"name" : 1
+		},
+		"name" : "name_1",
+		"ns" : "employee.empdetails"
+	}
+]
+> db.empdetails.explain().find({"name":"Shiva"})
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "employee.empdetails",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"name" : {
+				"$eq" : "Shiva"
+			}
+		},
+		"winningPlan" : {
+			"stage" : "FETCH",
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"keyPattern" : {
+					"name" : 1
+				},
+				"indexName" : "name_1",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"name" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "forward",
+				"indexBounds" : {
+					"name" : [
+						"[\"Shiva\", \"Shiva\"]"
+					]
+				}
+			}
+		},
+		"rejectedPlans" : [ ]
+	},
+	"serverInfo" : {
+		"host" : "lpz-ee212821",
+		"port" : 27017,
+		"version" : "3.6.8",
+		"gitVersion" : "8e540c0b6db93ce994cc548f000900bdc740f80a"
+	},
+	"ok" : 1
+}
+
+Count
+> db.emp.find().count()
+22
+
+
+> db.emp.deleteMany({name:"Guru"})
+{ "acknowledged" : true, "deletedCount" : 2 }
+
+> db.emp.count()
+22
+
+> db.emp.insert({name:"Guru"})
+WriteResult({ "nInserted" : 1 })
+
+> db.emp.remove({name:"Guru"})
+WriteResult({ "nRemoved" : 1 })
+
+> db.e2.find({salary:{$eq:121}}).pretty()
+{
+	"_id" : ObjectId("63f9d33265cb1c057104338e"),
+	"salary" : 121,
+	"dept" : "it",
+	"E_ID" : 2
+}
+> db.e2.find({salary:{$ne:121}}).pretty()
+{
+	"_id" : ObjectId("63f9d33265cb1c057104338d"),
+	"salary" : 1231,
+	"dept" : "it",
+	"E_ID" : 1
+}
+{
+	"_id" : ObjectId("63f9d34c65cb1c057104338f"),
+	"salary" : 231,
+	"dept" : "iit",
+	"E_ID" : 3
+}
+{
+	"_id" : ObjectId("63f9d34c65cb1c0571043390"),
+	"salary" : 11121,
+	"dept" : "iit",
+	"E_ID" : 4
+}
+{
+	"_id" : ObjectId("63f9d36765cb1c0571043391"),
+	"salary" : 23111,
+	"dept" : "iit",
+	"E_ID" : 5
+}
+{
+	"_id" : ObjectId("63f9d36765cb1c0571043392"),
+	"salary" : 1121,
+	"dept" : "iit",
+	"E_ID" : 6
+}
+> db.e2.find({salary:{$gt:121}}).pretty()
+{
+	"_id" : ObjectId("63f9d33265cb1c057104338d"),
+	"salary" : 1231,
+	"dept" : "it",
+	"E_ID" : 1
+}
+{
+	"_id" : ObjectId("63f9d34c65cb1c057104338f"),
+	"salary" : 231,
+	"dept" : "iit",
+	"E_ID" : 3
+}
+{
+	"_id" : ObjectId("63f9d34c65cb1c0571043390"),
+	"salary" : 11121,
+	"dept" : "iit",
+	"E_ID" : 4
+}
+{
+	"_id" : ObjectId("63f9d36765cb1c0571043391"),
+	"salary" : 23111,
+	"dept" : "iit",
+	"E_ID" : 5
+}
+{
+	"_id" : ObjectId("63f9d36765cb1c0571043392"),
+	"salary" : 1121,
+	"dept" : "iit",
+	"E_ID" : 6
+}
+> db.e2.find({salary:{$lt:121}}).pretty()
+> db.e2.find({salary:{$lte:121}}).pretty()
+{
+	"_id" : ObjectId("63f9d33265cb1c057104338e"),
+	"salary" : 121,
+	"dept" : "it",
+	"E_ID" : 2
+}
+> db.e2.find({salary:{$in:121}}).pretty()
+Error: error: {
+	"ok" : 0,
+	"errmsg" : "$in needs an array",
+	"code" : 2,
+	"codeName" : "BadValue"
+}
+> db.e2.find({salary:{$in:[121,231]}}).pretty()
+{
+	"_id" : ObjectId("63f9d33265cb1c057104338e"),
+	"salary" : 121,
+	"dept" : "it",
+	"E_ID" : 2
+}
+{
+	"_id" : ObjectId("63f9d34c65cb1c057104338f"),
+	"salary" : 231,
+	"dept" : "iit",
+	"E_ID" : 3
+}
+
+> db.e2.find({salary:{$nin:[121,231]}}).pretty()
+{
+	"_id" : ObjectId("63f9d33265cb1c057104338d"),
+	"salary" : 1231,
+	"dept" : "it",
+	"E_ID" : 1
+}
+{
+	"_id" : ObjectId("63f9d34c65cb1c0571043390"),
+	"salary" : 11121,
+	"dept" : "iit",
+	"E_ID" : 4
+}
+{
+	"_id" : ObjectId("63f9d36765cb1c0571043391"),
+	"salary" : 23111,
+	"dept" : "iit",
+	"E_ID" : 5
+}
+{
+	"_id" : ObjectId("63f9d36765cb1c0571043392"),
+	"salary" : 1121,
+	"dept" : "iit",
+	"E_ID" : 6
+}

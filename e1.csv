@@ -1,0 +1,3 @@
+{"_id":{"$oid":"63f9d1ba65cb1c057104338a"},"name":"abc","dept":"marketing"}
+{"_id":{"$oid":"63f9d1ba65cb1c057104338b"},"name":"xyz","dept":"developer"}
+{"_id":{"$oid":"63f9d1ba65cb1c057104338c"},"name":"aaa","dept":"testing"}

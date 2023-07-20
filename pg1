@@ -1,0 +1,12 @@
+select department_id,job_id,sum(salary) from emp group by department_id,rollup(department_id,job_id) ;
+select brand,segment,sum(quantity) from sales group by cube(brand,segment) order by brand,segment;
+select brand,segment,sum(quantity) from sales group by rollup(brand,segment) order by brand,segment;
+select brand,segment,sum(quantity) from sales group by brand, rollup(segment) order by brand,segment;
+
+select extract(year from current_date) yy, extract(month from current_date) mm, extract(day from current_date) dd;
+select extract(hour from current_time) hr, extract(minute from current_time) min, extract(second from current_time) seconds;
+
+with cte_max as(select employee_id, job_id,salary, rank() over (partition by job_id order by salary desc) rnk from emp) select employee_id, job_id, salary from cte_max where rnk=1;
+with cte_max as(select employee_id, job_id,salary, row_number() over (partition by job_id order by salary desc) rnk from emp) select employee_id, job_id, salary from cte_max where rnk=1;
+select * from emp;
+
